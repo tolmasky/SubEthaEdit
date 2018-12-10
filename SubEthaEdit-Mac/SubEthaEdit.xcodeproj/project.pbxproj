@@ -351,8 +351,6 @@
 		F27B2EF10B52968E00679CF2 /* HUDButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F27B2EED0B52968E00679CF2 /* HUDButtonCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F27B2EF20B52968E00679CF2 /* HUDButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F27B2EEE0B52968E00679CF2 /* HUDButton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F27C4DC5192FA2A800B5DB3C /* SEEHoverTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = F27C4DC4192FA2A800B5DB3C /* SEEHoverTableRowView.m */; };
-		F27EDD17216BC49A00987579 /* SubEthaEdit_AuthenticatedSave.scpt in Copy Command Line Tools */ = {isa = PBXBuildFile; fileRef = F27EDD10216BC3AD00987579 /* SubEthaEdit_AuthenticatedSave.scpt */; };
-		F27EDD1E216BD8F800987579 /* install.command in Copy Command Line Tools */ = {isa = PBXBuildFile; fileRef = F27EDD1A216BD8F500987579 /* install.command */; };
 		F27EDD2B216CBB6E00987579 /* DAW ActiveTabFill@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F27EDD1F216CBB6C00987579 /* DAW ActiveTabFill@2x.png */; };
 		F27EDD2C216CBB6E00987579 /* DAW InactiveTabRightCap@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F27EDD20216CBB6C00987579 /* DAW InactiveTabRightCap@2x.png */; };
 		F27EDD2D216CBB6E00987579 /* DAW InactiveTabBG.png in Resources */ = {isa = PBXBuildFile; fileRef = F27EDD21216CBB6C00987579 /* DAW InactiveTabBG.png */; };
@@ -386,8 +384,6 @@
 		F281D4370F388A0B00AD7DE1 /* FoldingTextAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F281D4360F388A0B00AD7DE1 /* FoldingTextAttachmentCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		F286A754215CE6410056C247 /* AboutPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = F286A756215CE6410056C247 /* AboutPanel.xib */; };
 		F286A764215CF0F60056C247 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 142890120957413900D14688 /* Localizable.strings */; };
-		F286A770215D0EAD0056C247 /* see in Copy Command Line Tools */ = {isa = PBXBuildFile; fileRef = F286A76F215D0DC00056C247 /* see */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		F286A780215D194C0056C247 /* see.1 in Copy Command Line Tools */ = {isa = PBXBuildFile; fileRef = F286A77F215D194C0056C247 /* see.1 */; };
 		F290D9D80EDB04EF00E643C0 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F290D9D70EDB04EF00E643C0 /* TCMPortMapper.framework */; };
 		F290D9DD0EDB04F900E643C0 /* TCMPortMapper.framework in Copy Files (Frameworks) */ = {isa = PBXBuildFile; fileRef = F290D9D70EDB04EF00E643C0 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F291D1A10FCECD22008BC286 /* FoldingBubbleText.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F291D1A00FCECD22008BC286 /* FoldingBubbleText.rtf */; };
@@ -418,7 +414,6 @@
 		F2CFF21718F53AFD004A745A /* NSLayoutConstraint+TCMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F2CFF21618F53AFD004A745A /* NSLayoutConstraint+TCMAdditions.m */; };
 		F2D129FC0BF0B64A00A776CC /* SEEConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F2D129F80BF0B64700A776CC /* SEEConnectionManager.m */; };
 		F2D12A1D0BF0B8DF00A776CC /* SEEConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F2D12A1B0BF0B8DF00A776CC /* SEEConnection.m */; };
-		F2D22CB40EE9C5E3004B8E33 /* SeeTextImporter.mdimporter in Copy Importers */ = {isa = PBXBuildFile; fileRef = F2D22CB30EE9C5DE004B8E33 /* SeeTextImporter.mdimporter */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F2D3E528189941F50096425B /* AddTab.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F2D3E4E5189941F50096425B /* AddTab.pdf */; };
 		F2D3E529189941F50096425B /* AW ActiveTabClose.png in Resources */ = {isa = PBXBuildFile; fileRef = F2D3E4E6189941F50096425B /* AW ActiveTabClose.png */; };
 		F2D3E52A189941F50096425B /* AW ActiveTabClose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F2D3E4E7189941F50096425B /* AW ActiveTabClose@2x.png */; };
@@ -525,9 +520,6 @@
 		F2DEC8820F90005700ADEE48 /* NSStringSEEAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1428920B095751CB00D14688 /* NSStringSEEAdditions.m */; };
 		F2EF08D119069E33004D5080 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = F2EF08CF19069E33004D5080 /* Localizable.stringsdict */; };
 		F2EFDE2C21760DFA00B5A4DD /* sparkle_dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F2EFDE2B21760DFA00B5A4DD /* sparkle_dsa_pub.pem */; };
-		F2EFDE3621760E1900B5A4DD /* org.sparkle-project.InstallerConnection.xpc in Copy Sparkle XPCServices */ = {isa = PBXBuildFile; fileRef = F2EFDE3021760E0800B5A4DD /* org.sparkle-project.InstallerConnection.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F2EFDE3721760E1900B5A4DD /* org.sparkle-project.InstallerLauncher.xpc in Copy Sparkle XPCServices */ = {isa = PBXBuildFile; fileRef = F2EFDE2E21760E0800B5A4DD /* org.sparkle-project.InstallerLauncher.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F2EFDE3821760E1900B5A4DD /* org.sparkle-project.InstallerStatus.xpc in Copy Sparkle XPCServices */ = {isa = PBXBuildFile; fileRef = F2EFDE2D21760E0800B5A4DD /* org.sparkle-project.InstallerStatus.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F2EFDE3B21760E6F00B5A4DD /* Sparkle.framework in Copy Files (Frameworks) */ = {isa = PBXBuildFile; fileRef = F2EFDE3921760E5B00B5A4DD /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F2F2B5A70CA7F7B80045C189 /* PrecedencePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 31D2C6E70CA7C7A7003CC5C9 /* PrecedencePreferences.m */; };
 		F2F2B6100CA811240045C189 /* TCMMMLogStatisticsDataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = F2F2B60D0CA811240045C189 /* TCMMMLogStatisticsDataPoint.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -612,54 +604,6 @@
 				4C0FDA231803125E008E24E8 /* UniversalDetector.framework in Copy Files (Frameworks) */,
 			);
 			name = "Copy Files (Frameworks)";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F286A767215D0CED0056C247 /* Copy Command Line Tools */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = bin;
-			dstSubfolderSpec = 12;
-			files = (
-				F27EDD1E216BD8F800987579 /* install.command in Copy Command Line Tools */,
-				F286A770215D0EAD0056C247 /* see in Copy Command Line Tools */,
-				F286A780215D194C0056C247 /* see.1 in Copy Command Line Tools */,
-				F27EDD17216BC49A00987579 /* SubEthaEdit_AuthenticatedSave.scpt in Copy Command Line Tools */,
-			);
-			name = "Copy Command Line Tools";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F286A77B215D190D0056C247 /* Copy Man Pages */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = man/man1;
-			dstSubfolderSpec = 12;
-			files = (
-			);
-			name = "Copy Man Pages";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F28A04242174D84B0056B45D /* Copy Sparkle XPCServices */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
-			dstSubfolderSpec = 16;
-			files = (
-				F2EFDE3621760E1900B5A4DD /* org.sparkle-project.InstallerConnection.xpc in Copy Sparkle XPCServices */,
-				F2EFDE3721760E1900B5A4DD /* org.sparkle-project.InstallerLauncher.xpc in Copy Sparkle XPCServices */,
-				F2EFDE3821760E1900B5A4DD /* org.sparkle-project.InstallerStatus.xpc in Copy Sparkle XPCServices */,
-			);
-			name = "Copy Sparkle XPCServices";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F298A0040CCB9EFC00C4DB8B /* Copy Importers */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = Contents/Library/Spotlight;
-			dstSubfolderSpec = 1;
-			files = (
-				F2D22CB40EE9C5E3004B8E33 /* SeeTextImporter.mdimporter in Copy Importers */,
-			);
-			name = "Copy Importers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F2C4C2640F93E51800A3E0B5 /* Copy Frameworks */ = {
@@ -2623,12 +2567,6 @@
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 				149EC6970958726E002BDC41 /* Copy Files (Frameworks) */,
-				F286A767215D0CED0056C247 /* Copy Command Line Tools */,
-				F28A04242174D84B0056B45D /* Copy Sparkle XPCServices */,
-				F286A77B215D190D0056C247 /* Copy Man Pages */,
-				F298A0040CCB9EFC00C4DB8B /* Copy Importers */,
-				F213791B2191BBEE00C74681 /* Mac App Store Modifications */,
-				142898130958165400D14688 /* Run Script (Deployment) */,
 			);
 			buildRules = (
 			);
@@ -3034,20 +2972,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		142898130958165400D14688 /* Run Script (Deployment) */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script (Deployment)";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "echo \"Removing debug nib files...\"\nfind -d \"$TARGET_BUILD_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION/Contents/Resources\" -name \"Debug*.nib\" -exec rm -rf \"{}\" \\;\n\n# echo \"Rename resource file...\"\n# mv \"$TARGET_BUILD_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION/Contents/Resources/SubEthaEdit.rsrc\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.$WRAPPER_EXTENSION/Contents/Resources/SubEthaEdit-SystemVersionCheck.rsrc\"\n\necho \"Remove Headers directories...\"\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -path '*/Headers/*' -delete\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type d -delete\nfind \"$TARGET_BUILD_DIR/$FULL_PRODUCT_NAME\" -name 'Headers' -type l -delete\n";
-		};
 		5EC638280ABEB71100D3295B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3060,24 +2984,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		F213791B2191BBEE00C74681 /* Mac App Store Modifications */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Mac App Store Modifications";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/PostProcessingScripts/SubEthaEdit_AppStoreCleanup.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3747,6 +3653,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -3782,6 +3689,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

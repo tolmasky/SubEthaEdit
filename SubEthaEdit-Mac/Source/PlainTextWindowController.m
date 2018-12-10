@@ -67,15 +67,6 @@ static NSPoint S_cascadePoint = {0.0,0.0};
 
     I_dialogSplitView = nil;
     I_documentDialog = nil;
-    
-    [I_documents release];
-    I_documents = nil;
-
-	[I_tabBar setDelegate:nil];
-	[I_tabBar setTabView:nil];
-	[I_tabView setDelegate:nil];
-	[I_tabBar release];
-	[I_tabView release];
 	 
     [[SEEDocumentController sharedInstance] updateTabMenu];
             
@@ -92,36 +83,7 @@ static NSPoint S_cascadePoint = {0.0,0.0};
 	NSWindow *window = self.window;
     [[window contentView] setAutoresizesSubviews:YES];
 
-	NSRect contentFrame = [[window contentView] frame];
-	 
-	I_tabBar = [[PSMTabBarControl alloc] initWithFrame:NSMakeRect(0.0, NSHeight(contentFrame) - [SEETabStyle desiredTabBarControlHeight], NSWidth(contentFrame), [SEETabStyle desiredTabBarControlHeight])];
-    [I_tabBar setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
-//	[I_tabBar setTearOffStyle:PSMTabBarTearOffMiniwindow];
-    [I_tabBar setStyleNamed:@"SubEthaEdit"];
-	[I_tabBar setAlwaysShowActiveTab:YES];
-
-	// hook up add tab button
-	[I_tabBar setShowAddTabButton:YES];
-	[[I_tabBar addTabButton] setTarget:nil];
-	[[I_tabBar addTabButton] setAction:@selector(newDocumentInTab:)];
-
-    [[window contentView] addSubview:I_tabBar];
-
-    I_tabView = [[NSTabView alloc] initWithFrame:NSMakeRect(0.0, 0.0, NSWidth(contentFrame), NSHeight(contentFrame) - [SEETabStyle desiredTabBarControlHeight])];
-    [I_tabView setAutoresizingMask:NSViewHeightSizable | NSViewWidthSizable];
-    [I_tabView setTabViewType:NSNoTabsNoBorder];
-
-    [[window contentView] addSubview:I_tabView];
-    [I_tabBar setTabView:I_tabView];
-    [I_tabView setDelegate:I_tabBar];
-    [I_tabBar setDelegate:self];
-    [I_tabBar setPartnerView:I_tabView];
-
-    BOOL shouldHideTabBar = [[NSUserDefaults standardUserDefaults] boolForKey:kSEEDefaultsKeyAlwaysShowTabBar];
-    [I_tabBar setHideForSingleTab:!shouldHideTabBar];
-    [I_tabBar hideTabBar:!shouldHideTabBar animate:NO];
-    [I_tabBar setCellOptimumWidth:300];
-    [I_tabBar setCellMinWidth:140];
+    [[window contentView] addSubview:I_textEditor.view];
 
     [self updateForPortMapStatus];
 	[self updateWindowMinSize];
@@ -1452,142 +1414,110 @@ static NSPoint S_cascadePoint = {0.0,0.0};
 }
 
 - (void)setDocument:(NSDocument *)document {
-    PlainTextDocument *previouslySelectedDocument = self.document;
+    PlainTextDocument *previousDocument = self.document;
     
-    if (document == previouslySelectedDocument) {
-        [super setDocument:document];
-        NSTabViewItem *tabViewItem = [self tabViewItemForDocument:(PlainTextDocument *)document];
-        if (tabViewItem) {
-            PlainTextWindowControllerTabContext *tabContext = [tabViewItem identifier];
-            I_dialogSplitView = [tabContext dialogSplitView];
-        }
-    } else {
-        [[URLBubbleWindow sharedURLBubbleWindow] hideIfNecessary];
-        
-        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-        if (previouslySelectedDocument) {
-            [center removeObserver:self
-                              name:PlainTextDocumentSessionWillChangeNotification
-                            object:previouslySelectedDocument];
-            
-            [center removeObserver:self
-                              name:PlainTextDocumentSessionDidChangeNotification
-                            object:previouslySelectedDocument];
-            
-            [center removeObserver:self
-                              name:PlainTextDocumentParticipantsDataDidChangeNotification
-                            object:previouslySelectedDocument];
-            
-            [center removeObserver:self
-                              name:TCMMMSessionParticipantsDidChangeNotification
-                            object:[previouslySelectedDocument session]];
-            
-            [center removeObserver:self
-                              name:TCMMMSessionPendingUsersDidChangeNotification
-                            object:[previouslySelectedDocument session]];
-            
-            [center removeObserver:self
-                              name:TCMMMSessionDidChangeNotification
-                            object:[previouslySelectedDocument session]];
-            
-            [center removeObserver:self
-                              name:PlainTextDocumentDidChangeDisplayNameNotification
-                            object:previouslySelectedDocument];
-            
-            [center removeObserver:self
-                              name:PlainTextDocumentDidChangeDocumentModeNotification
-                            object:previouslySelectedDocument];
-        }
-        
-        BOOL isNew = NO;
-        [super setDocument:document];
-        // A document has been told that this window controller belongs to it.
-        
-        // Every document sends it window controllers -setDocument:nil when it's closed. We ignore such messages for some purposes.
-        if (document) {
-            // Have we already recorded this document in our list?
-            NSArray *documents = [self documents];
-            if (![documents containsObject:document]) {
-                // No. Record it, in a KVO-compliant way.
-                NSTabViewItem *tab = [self addDocument:document];
-                [I_tabView selectTabViewItem:tab];
-                
-                isNew = [I_tabView numberOfTabViewItems] == 1 ? YES : NO;
-            } else {
-                // document is already there
-                NSTabViewItem *tabViewItem = [self tabViewItemForDocument:(PlainTextDocument *)document];
-                if (tabViewItem) {
-                    PlainTextWindowControllerTabContext *tabContext = [tabViewItem identifier];
-                    I_dialogSplitView = [tabContext dialogSplitView];
-                    if ([tabContext.plainTextEditors count] > 0) {
-                        [[self window] setInitialFirstResponder:[[tabContext.plainTextEditors objectAtIndex:0] textView]];
-                    }
-                    [I_tabView selectTabViewItem:tabViewItem];
-                } else {
-                    I_dialogSplitView = nil;
-                }
-            }
-            
-            if ([[self window] isKeyWindow]) {
-                [(PlainTextDocument *)document adjustModeMenu];
-                [[SEEDocumentController sharedInstance] updateTabMenu];
-            }
-            [self refreshDisplay];
-            
-            NSEnumerator *editors = [[self plainTextEditors] objectEnumerator];
-            PlainTextEditor *editor = nil;
-            while ((editor = [editors nextObject])) {
-                [editor updateViews];
-            }
-            
-            if (isNew) {
-                DocumentMode *mode = [(PlainTextDocument *)document documentMode];
-                [self setSizeByColumns:[[mode defaultForKey:DocumentModeColumnsPreferenceKey] intValue]
-                                  rows:[[mode defaultForKey:DocumentModeRowsPreferenceKey] intValue]];
-            }
-            
-            [center addObserver:self
-                       selector:@selector(sessionWillChange:)
-                           name:PlainTextDocumentSessionWillChangeNotification
-                         object:document];
-            [center addObserver:self
-                       selector:@selector(sessionDidChange:)
-                           name:PlainTextDocumentSessionDidChangeNotification
-                         object:document];
-            
-            [center addObserver:self
-                       selector:@selector(participantsDataDidChange:)
-                           name:PlainTextDocumentParticipantsDataDidChangeNotification
-                         object:document];
-            
-            [center addObserver:self
-                       selector:@selector(participantsDidChange:)
-                           name:TCMMMSessionParticipantsDidChangeNotification
-                         object:[(PlainTextDocument *)document session]];
-            
-            [center addObserver:self
-                       selector:@selector(pendingUsersDidChange:)
-                           name:TCMMMSessionPendingUsersDidChangeNotification
-                         object:[(PlainTextDocument *)document session]];
-            
-            [center addObserver:self
-                       selector:@selector(MMSessionDidChange:)
-                           name:TCMMMSessionDidChangeNotification
-                         object:[(PlainTextDocument *)document session]];
-            
-            [center addObserver:self
-                       selector:@selector(displayNameDidChange:)
-                           name:PlainTextDocumentDidChangeDisplayNameNotification
-                         object:document];
-            
-            [center postNotificationName:@"PlainTextWindowControllerDocumentDidChangeNotification" object:self];
-        } else {
-            I_dialogSplitView = nil;
-        }
-        [self updateWindowMinSize];
-    }
-}
+    if (previousDocument == document)
+        return;
 
+    [[URLBubbleWindow sharedURLBubbleWindow] hideIfNecessary];
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+
+    if (previousDocument) {
+        [center removeObserver:self
+                          name:PlainTextDocumentSessionWillChangeNotification
+                        object:previousDocument];
+        
+        [center removeObserver:self
+                          name:PlainTextDocumentSessionDidChangeNotification
+                        object:previousDocument];
+        
+        [center removeObserver:self
+                          name:PlainTextDocumentParticipantsDataDidChangeNotification
+                        object:previousDocument];
+        
+        [center removeObserver:self
+                          name:TCMMMSessionParticipantsDidChangeNotification
+                        object:[previousDocument session]];
+        
+        [center removeObserver:self
+                          name:TCMMMSessionPendingUsersDidChangeNotification
+                        object:[previousDocument session]];
+        
+        [center removeObserver:self
+                          name:TCMMMSessionDidChangeNotification
+                        object:[previousDocument session]];
+        
+        [center removeObserver:self
+                          name:PlainTextDocumentDidChangeDisplayNameNotification
+                        object:previousDocument];
+        
+        [center removeObserver:self
+                          name:PlainTextDocumentDidChangeDocumentModeNotification
+                        object:previousDocument];
+    }
+
+    [super setDocument:document];
+    if (!document)
+        return;
+
+    BOOL isNew = NO;
+    [super setDocument:document];
+
+    if ([[self window] isKeyWindow])
+        [(PlainTextDocument *)document adjustModeMenu];
+
+    [self refreshDisplay];
+
+    NSEnumerator *editors = [[self plainTextEditors] objectEnumerator];
+    PlainTextEditor *editor = nil;
+    while ((editor = [editors nextObject])) {
+        [editor updateViews];
+    }
+
+    if (isNew) {
+        DocumentMode *mode = [(PlainTextDocument *)document documentMode];
+        [self setSizeByColumns:[[mode defaultForKey:DocumentModeColumnsPreferenceKey] intValue]
+                          rows:[[mode defaultForKey:DocumentModeRowsPreferenceKey] intValue]];
+    }
+
+    [center addObserver:self
+               selector:@selector(sessionWillChange:)
+                   name:PlainTextDocumentSessionWillChangeNotification
+                 object:document];
+    [center addObserver:self
+               selector:@selector(sessionDidChange:)
+                   name:PlainTextDocumentSessionDidChangeNotification
+                 object:document];
+
+    [center addObserver:self
+               selector:@selector(participantsDataDidChange:)
+                   name:PlainTextDocumentParticipantsDataDidChangeNotification
+                 object:document];
+
+    [center addObserver:self
+               selector:@selector(participantsDidChange:)
+                   name:TCMMMSessionParticipantsDidChangeNotification
+                 object:[(PlainTextDocument *)document session]];
+
+    [center addObserver:self
+               selector:@selector(pendingUsersDidChange:)
+                   name:TCMMMSessionPendingUsersDidChangeNotification
+                 object:[(PlainTextDocument *)document session]];
+
+    [center addObserver:self
+               selector:@selector(MMSessionDidChange:)
+                   name:TCMMMSessionDidChangeNotification
+                 object:[(PlainTextDocument *)document session]];
+
+    [center addObserver:self
+               selector:@selector(displayNameDidChange:)
+                   name:PlainTextDocumentDidChangeDisplayNameNotification
+                 object:document];
+
+    [center postNotificationName:@"PlainTextWindowControllerDocumentDidChangeNotification" object:self];
+
+    [self updateWindowMinSize];
+}
 
 - (void)close {
     //NSLog(@"%s",__FUNCTION__);
@@ -1645,233 +1575,6 @@ static NSPoint S_cascadePoint = {0.0,0.0};
     }
 	[contextToClose.plainTextEditors makeObjectsPerformSelector:@selector(prepareForDealloc)];
 	[contextToClose release];
-}
-
-
-#pragma mark - PSMTabBarControlDelegate
-
-- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem {
-    PlainTextWindowControllerTabContext *tabContext = [tabViewItem identifier];
-    id document = [tabContext document];
-    if ([[self documents] containsObject:document]) {
-        [self setDocument:document];
-        if ([tabContext isAlertScheduled]) {
-            [document presentScheduledAlertForWindow:[self window]];
-            [tabContext setIsAlertScheduled:NO];
-        }
-
-		[self invalidateRestorableState];
-    }
-}
-
-- (void)document:(NSDocument *)doc shouldClose:(BOOL)shouldClose contextInfo:(void *)contextInfo {
-    if (shouldClose) {
-        NSArray *windowControllers = [doc windowControllers];
-        NSUInteger windowControllerCount = [windowControllers count];
-
-		if (self.tabView.tabViewItems.count == 1) {
-			// [self close] doesn't trigger window delegate calls. so we need to make sure we update the menu
-			// through the window resign call when closing the last tab.
-			[self windowDidResignKey:nil];
-		}
-
-        if (windowControllerCount > 1) {
-            [self documentWillClose:doc];
-            [self close];
-        } else {
-            [doc close];
-        }
-
-        // updateTabMenu
-        [[SEEDocumentController sharedInstance] updateTabMenu];
-    }
-}
-
-- (BOOL)tabView:(NSTabView *)tabView shouldCloseTabViewItem:(NSTabViewItem *)tabViewItem {
-    id document = [[tabViewItem identifier] document];
-    [document canCloseDocumentWithDelegate:self shouldCloseSelector:@selector(document:shouldClose:contextInfo:) contextInfo:nil];
-
-    return NO;
-}
-
-- (BOOL)tabView:(NSTabView*)aTabView shouldDragTabViewItem:(NSTabViewItem *)tabViewItem fromTabBar:(PSMTabBarControl *)tabBarControl {
-	return YES;
-}
-
-- (BOOL)tabView:(NSTabView*)aTabView shouldDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl {
-    if ([[tabBarControl window] attachedSheet]) {
-        return NO;
-    }
-
-    if (![aTabView isEqual:I_tabView]) {
-        PlainTextWindowController *windowController = (PlainTextWindowController *)[[tabBarControl window] windowController];
-        id document = [[tabViewItem identifier] document];
-        if ([[windowController documents] containsObject:document]) {
-            return NO;
-        }
-    }
-	return YES;
-}
-
-- (NSImage *)tabView:(NSTabView *)aTabView imageForTabViewItem:(NSTabViewItem *)tabViewItem offset:(NSSize *)offset styleMask:(NSUInteger *)styleMask {
-	[[self window] disableFlushWindow];
-    NSTabViewItem *oldItem = [aTabView selectedTabViewItem];
-    [aTabView selectTabViewItem:tabViewItem];
-    [aTabView display];
-
-	// get the view chache
-	NSView *contentView = [[self window] contentView];
-	NSBitmapImageRep *viewCache = [contentView bitmapImageRepForCachingDisplayInRect:contentView.frame];
-	[contentView cacheDisplayInRect:contentView.frame toBitmapImageRep:viewCache];
-
-    [aTabView selectTabViewItem:oldItem];
-    [aTabView display];
-	[[self window] enableFlushWindow];
-
-	NSImage *viewImage = [NSImage imageWithSize:viewCache.size flipped:NO drawingHandler:^BOOL(NSRect dstRect) {
-		[viewCache drawInRect:dstRect fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0 respectFlipped:NO hints:nil];
-
-		//draw over where the tab bar would usually be
-		NSRect tabFrame = [I_tabBar frame];
-		[[NSColor clearColor] set];
-		NSRectFill(tabFrame);
-
-		//draw the background flipped, which is actually the right way up
-		NSAffineTransform *transform = [NSAffineTransform transform];
-		[transform scaleXBy:1.0 yBy:-1.0];
-		[transform concat];
-		tabFrame.origin.y = -tabFrame.origin.y - tabFrame.size.height;
-		[[((PSMTabBarControl *)[aTabView delegate]) style] drawBezelOfTabBarControl:I_tabBar inRect:tabFrame];
-		[transform invert];
-		[transform concat];
-
-		return YES;
-	}];
-
-	if (offset != NULL) {
-		PSMTabBarControl *tabItem = (PSMTabBarControl *)[aTabView delegate];
-		if ([tabItem orientation] == PSMTabBarHorizontalOrientation) {
-			offset->width = [(id <PSMTabStyle>)[tabItem style] leftMarginForTabBarControl:tabItem];
-			offset->height = 24;
-		} else {
-			offset->width = 0;
-			offset->height = 24 + [(id <PSMTabStyle>)[tabItem style] leftMarginForTabBarControl:tabItem];
-		}
-	}
-
-	if (styleMask != NULL) {
-		*styleMask = NSBorderlessWindowMask; //NSTitledWindowMask;
-	}
-
-	return viewImage;
-}
-
-- (PSMTabBarControl *)tabView:(NSTabView *)aTabView newTabBarForDraggedTabViewItem:(NSTabViewItem *)tabViewItem atPoint:(NSPoint)point {
-	BOOL shouldCreateFullscreenWindow = NO;
-
-	if ([aTabView isEqual:I_tabView] && (aTabView.window.styleMask & NSFullScreenWindowMask) == NSFullScreenWindowMask) {
-		NSWindow *window = aTabView.window;
-        
-        NSRect screenMouseRect = NSZeroRect;
-        screenMouseRect.origin = point;
-        NSRect windowMouseRect = [window convertRectFromScreen:screenMouseRect];
-        
-		NSPoint windowMousePoint = windowMouseRect.origin;
-		NSView *hitView = [window.contentView hitTest:windowMousePoint];
-		if (hitView != nil) {
-			if (aTabView.tabViewItems.count > 1) {
-				shouldCreateFullscreenWindow = YES;
-			} else {
-				[window setAlphaValue:1.0];
-				return nil;
-			}
-		}
-	}
-
-	//create a new window controller with no tab items
-	PlainTextWindowController *controller = [[[PlainTextWindowController alloc] init] autorelease];
-	PSMTabBarControl *tabBarControl = (PSMTabBarControl *)[aTabView delegate];
-    id <PSMTabStyle> style = [tabBarControl style];
-
-	NSWindow *newWindow = [controller window];
-	if (shouldCreateFullscreenWindow) {
-		[newWindow toggleFullScreen:self];
-	} else {
-		NSRect windowFrame = [newWindow frame];
-		point.y += windowFrame.size.height - [[newWindow contentView] frame].size.height;
-		point.x -= [style leftMarginForTabBarControl:tabBarControl];
-
-		NSRect contentRect = [[self window] contentRectForFrameRect:[[self window] frame]];
-		NSRect frame = [newWindow frameRectForContentRect:contentRect];
-		[newWindow setFrame:frame display:NO];
-		[newWindow setFrameTopLeftPoint:point];
-	}
-	[[controller tabBar] setStyle:style];
-
-	BOOL hideForSingleTab = [(PSMTabBarControl *)[aTabView delegate] hideForSingleTab];
-	[[controller tabBar] setHideForSingleTab:hideForSingleTab];
-	
-    [[SEEDocumentController sharedInstance] addWindowController:controller];
-
-	return [controller tabBar];
-}
-
-- (void)tabView:(NSTabView *)aTabView didDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl {
-    if ([[self window] isMainWindow]) {
-        // update window menu
-        [[SEEDocumentController sharedInstance] updateTabMenu];
-    }
-    if (![tabBarControl isEqual:I_tabBar]) {
-        
-        PlainTextWindowController *windowController = (PlainTextWindowController *)[[tabBarControl window] windowController];
-		windowController.frameForNonFullScreenMode = self.frameForNonFullScreenMode;
-		[windowController invalidateRestorableState];
-
-        id document = [[tabViewItem identifier] document];
-        NSUInteger documentIndex = [[self documents] indexOfObject:document];
-        [document retain];
-	    [document setKeepUndoManagerOnZeroWindowControllers:YES];
-        [document removeWindowController:self];
-        [self removeObjectFromDocumentsAtIndex:documentIndex];
-        
-        if ([[self documents] count] == 0) {
-            [[self retain] autorelease];
-            [[SEEDocumentController sharedInstance] removeWindowController:[[self retain] autorelease]];
-        } else {
-            [self setDocument:[[[[self tabView] selectedTabViewItem] identifier] document]];
-        } 
-        
-        [windowController insertObject:document inDocumentsAtIndex:[[windowController documents] count]];
-        [document addWindowController:windowController];
-	    [document setKeepUndoManagerOnZeroWindowControllers:NO];
-
-        [windowController setDocument:document];
-        
-		PlainTextEditor *editor = [[self plainTextEditors] lastObject];
-		if (editor.hasBottomOverlayView) {
-			[windowController openParticipantsOverlayForDocument:document];
-		}
-        [document release];
-
-        if (![windowController hasManyDocuments]) {
-            [tabBarControl setHideForSingleTab:![[NSUserDefaults standardUserDefaults] boolForKey:kSEEDefaultsKeyAlwaysShowTabBar]];
-            [tabBarControl hideTabBar:![[NSUserDefaults standardUserDefaults] boolForKey:kSEEDefaultsKeyAlwaysShowTabBar] animate:NO];
-        }
-    }
-}
-
-- (void)tabView:(NSTabView *)aTabView closeWindowForLastTabViewItem:(NSTabViewItem *)tabViewItem {
-	[[self window] close];
-}
-
-- (BOOL)tabView:(NSTabView *)aTabView validateOverflowMenuItem:(NSMenuItem *)menuItem forTabViewItem:(NSTabViewItem *)tabViewItem {
-    return YES;
-}
-
-- (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem {
-    PlainTextWindowControllerTabContext *tabContext = [tabViewItem identifier];
-    PlainTextDocument *document = [tabContext document];
-    return [self windowTitleForDocumentDisplayName:[document displayName] document:document];
 }
 
 @end

@@ -17,7 +17,7 @@ extern NSString * const PlainTextEditorDidChangeSearchScopeNotification;
 
 @class PlainTextWindowControllerTabContext,PlainTextDocument,SEEPlainTextEditorScrollView,PopUpButton,RadarScroller,TCMMMUser, SEETextView, BorderedTextField;
 
-@interface PlainTextEditor : NSResponder <NSTextViewDelegate> 
+@interface PlainTextEditor : NSViewController <NSTextViewDelegate>
 
 @property (nonatomic, readonly) BOOL hasBottomOverlayView;
 @property (nonatomic, readonly) BOOL hasTopOverlayView;

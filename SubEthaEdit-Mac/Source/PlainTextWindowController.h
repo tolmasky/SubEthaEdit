@@ -23,6 +23,7 @@
     } I_flags;
     NSTimer *I_dialogAnimationTimer;
     BOOL I_doNotCascade;
+     IBOutlet NSViewController * I_textEditor;
 
  @private
     NSTabView *I_tabView;
