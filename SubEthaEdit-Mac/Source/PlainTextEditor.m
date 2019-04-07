@@ -59,8 +59,8 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
 - (NSMenu *)bottomPart {
     NSMenu *newMenu = [[NSMenu new] autorelease];
     NSArray *items = [self itemArray];
-    int count = [items count];
-    int index = count - 1;
+    NSUInteger count = [items count];
+    NSUInteger index = count - 1;
 
     while (index >= 0) {
         if ([[items objectAtIndex:index] isSeparatorItem]) {
@@ -84,13 +84,11 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
 
 @interface PlainTextEditor () <TCMHoverButtonRightMouseDownHandler>
 
-@property (nonatomic, strong) IBOutlet NSView *O_editorView;
 @property (nonatomic, strong) IBOutlet SEEOverlayView *O_bottomStatusBarView;
 @property (nonatomic, assign) IBOutlet TCMHoverButton *shareInviteUsersButtonOutlet;
 @property (nonatomic, assign) IBOutlet TCMHoverButton *shareAnnounceButtonOutlet;
 @property (nonatomic, assign) IBOutlet TCMHoverButton *showParticipantsButtonOutlet;
 
-@property (nonatomic, assign) IBOutlet NSObjectController *ownerController;
 @property (nonatomic, strong) NSArray *topLevelNibObjects;
 @property (nonatomic, strong) NSViewController *bottomOverlayViewController;
 @property (nonatomic, strong) NSViewController *topOverlayViewController;
@@ -166,7 +164,7 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     [self _removeNotificationRegistrations];
     
 	// release the objects that are bound so we get dealloced later
-	self.ownerController.content = nil;
+	//self.ownerController.content = nil;
 	self.topLevelNibObjects = nil;
 }
 
@@ -183,9 +181,8 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     [I_storedSelectedRanges release];
     [I_storedPosition release];
 
-    [self.O_editorView setNextResponder:nil];
+    [self.view setNextResponder:nil];
 	self.topLevelNibObjects = nil;
-	self.O_editorView = nil;
 
 	self.topBarViewController = nil;
 	self.topBlurLayerView = nil;
@@ -262,12 +259,12 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     [self.topBarViewController setSplitButtonVisible:NO];
     self.topBarViewController.splitButtonVisible = I_flags.hasSplitButton;
     [self.topBarViewController setVisible:I_flags.showTopStatusBar];
-    [self.O_editorView addSubview:self.topBarViewController.view];
+    [self.view addSubview:self.topBarViewController.view];
     
     // generate top blur layer
     self.topBlurLayerView = ({
         SEEOverlayView *view = [[[SEEOverlayView alloc] initWithFrame:NSZeroRect] autorelease];
-        NSView *containerView = self.O_editorView;
+        NSView *containerView = self.view;
         view.translatesAutoresizingMaskIntoConstraints = NO;
         [containerView addSubview:view];
         [containerView addConstraints:@[
@@ -282,7 +279,7 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
                                               [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0]
                                               ];
         [containerView addConstraints:self.topBlurBackgroundConstraints];
-        //		view.layer.backgroundColor = [[[NSColor redColor] colorWithAlphaComponent:0.8] CGColor];
+        //        view.layer.backgroundColor = [[[NSColor redColor] colorWithAlphaComponent:0.8] CGColor];
         view.backgroundBlurActive = YES;
         view.brightnessAdjustForInactiveWindowState = 0.7;
         view;
@@ -310,7 +307,7 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     // generate bottom blur layer
     self.bottomBlurLayerView = ({
         SEEOverlayView *view = [[[SEEOverlayView alloc] initWithFrame:NSZeroRect] autorelease];
-        NSView *containerView = self.O_editorView;
+        NSView *containerView = self.view;
         view.translatesAutoresizingMaskIntoConstraints = NO;
         [containerView addSubview:view];
         [containerView addConstraints:@[
@@ -325,7 +322,7 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
                                                  [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:0]
                                                  ];
         [containerView addConstraints:self.bottomBlurBackgroundConstraints];
-        //		view.layer.backgroundColor = [[[NSColor redColor] colorWithAlphaComponent:0.8] CGColor];
+        //        view.layer.backgroundColor = [[[NSColor redColor] colorWithAlphaComponent:0.8] CGColor];
         view.backgroundBlurActive = YES;
         view.brightnessAdjustForInactiveWindowState = 0.7;
         view;
@@ -451,6 +448,7 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     [self updateBottomScrollViewInset];
 }
 
+
 - (void)loadViewPostprocessing {
     [self loadViewSetupBarsAndOverlays];
 	
@@ -554,17 +552,17 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     
 
 	// Adding a second view hierachy to include this controller into the responder chain
-    NSView *view = [[[NSView alloc] initWithFrame:[self.O_editorView frame]] autorelease];
+    NSView *view = [[[NSView alloc] initWithFrame:[self.view frame]] autorelease];
     [view setAutoresizesSubviews:YES];
     [view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-    [view addSubview:self.O_editorView];
+    [view addSubview:self.view];
     [view setPostsFrameChangedNotifications:YES];
-	[view setWantsLayer:self.O_editorView.wantsLayer];
-    [self.O_editorView setNextResponder:self];
+    [view setWantsLayer:self.view.wantsLayer];
+    [self.view setNextResponder:self];
 	
     [self setNextResponder:view];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewFrameDidChange:) name:NSViewFrameDidChangeNotification object:view];
-    self.O_editorView = view;
+    self.view = view;
 	
 	// localize the announce status menu - take from main menu
 	NSMenuItem *accessMenuItem = [[AppController sharedInstance] accessControlMenuItem];
@@ -763,10 +761,10 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
     NSFont *font = [[self document] fontWithTrait:0];
     CGFloat characterWidth = [@"n" sizeWithAttributes :[NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName]].width;
 
-    result.width = characterWidth * aColumns + [[I_textView textContainer] lineFragmentPadding] * 2 + [I_textView textContainerInset].width * 2 + ([self.O_editorView bounds].size.width - [O_scrollView SEE_effectiveContentSize].width) + 2.0;
+    result.width = characterWidth * aColumns + [[I_textView textContainer] lineFragmentPadding] * 2 + [I_textView textContainerInset].width * 2 + ([self.view bounds].size.width - [O_scrollView SEE_effectiveContentSize].width) + 2.0;
 
     result.height = [[I_textContainer layoutManager] defaultLineHeightForFont:font] * aRows +
-	([self.O_editorView bounds].size.height - [O_scrollView SEE_effectiveContentSize].height) + O_scrollView.topOverlayHeight + O_scrollView.bottomOverlayHeight + 2.0;
+	([self.view bounds].size.height - [O_scrollView SEE_effectiveContentSize].height) + O_scrollView.topOverlayHeight + O_scrollView.bottomOverlayHeight + 2.0;
 
     return result;
 }
@@ -923,7 +921,7 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
 }
 
 - (NSView *)editorView {
-    return self.O_editorView;
+    return self.view;
 }
 
 
@@ -2158,11 +2156,11 @@ NSString * const PlainTextEditorDidChangeSearchScopeNotification = @"PlainTextEd
                     break;
                 }
             }
-            NSRect frame = [self.O_editorView frame];
+            NSRect frame = [self.view frame];
             frame.size.width = 50;
             frame.origin.y = frame.size.height - 20;
             frame.size.height = 20;
-            [s_cell performClickWithFrame:frame inView:self.O_editorView];
+            [s_cell performClickWithFrame:frame inView:self.view];
             return;
         }
         else if ([self showsBottomStatusBar])

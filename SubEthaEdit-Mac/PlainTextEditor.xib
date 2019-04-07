@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14313.18"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14460.31"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,10 +17,10 @@
                 <outlet property="O_scrollView" destination="6" id="11"/>
                 <outlet property="O_tabStatusPopUpButton" destination="84" id="86"/>
                 <outlet property="O_windowWidthTextField" destination="15" id="21"/>
-                <outlet property="ownerController" destination="UOY-gY-y9M" id="sBN-7j-yXB"/>
                 <outlet property="shareAnnounceButtonOutlet" destination="7Mi-Cu-bLB" id="XN5-mI-pJm"/>
                 <outlet property="shareInviteUsersButtonOutlet" destination="bv6-mv-CIq" id="hQV-kB-VvW"/>
                 <outlet property="showParticipantsButtonOutlet" destination="OwG-YH-zbO" id="jkR-7d-K61"/>
+                <outlet property="view" destination="5" id="wCM-mW-mj8"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -74,8 +74,6 @@
                             </buttonCell>
                             <connections>
                                 <action selector="toggleIsAnnounced:" target="-1" id="IJN-40-Y5s"/>
-                                <binding destination="UOY-gY-y9M" name="enabled" keyPath="selection.canAnnounceAndShare" id="KZE-0T-PPN"/>
-                                <binding destination="UOY-gY-y9M" name="toolTip" keyPath="selection.localizedToolTipAnnounceButton" id="1i8-zy-1ct"/>
                                 <outlet property="menu" destination="eH3-RU-uKl" id="H3t-Aa-F1C"/>
                             </connections>
                         </button>
@@ -87,15 +85,6 @@
                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                             </textFieldCell>
-                            <connections>
-                                <binding destination="UOY-gY-y9M" name="toolTip" keyPath="selection.localizedToolTipToggleParticipantsButton" id="9KJ-o0-HP2"/>
-                                <binding destination="UOY-gY-y9M" name="value" keyPath="selection.numberOfActiveParticipants" id="fVh-cW-zcy"/>
-                                <binding destination="UOY-gY-y9M" name="hidden" keyPath="selection.showsNumberOfActiveParticipants" id="3lD-7H-ULp">
-                                    <dictionary key="options">
-                                        <string key="NSValueTransformerName">NSNegateBoolean</string>
-                                    </dictionary>
-                                </binding>
-                            </connections>
                         </textField>
                         <button id="OwG-YH-zbO" userLabel="Participants Button" customClass="TCMHoverButton">
                             <rect key="frame" x="505" y="2" width="24" height="14"/>
@@ -106,7 +95,6 @@
                             </buttonCell>
                             <connections>
                                 <action selector="toggleParticipantsOverlay:" target="-1" id="YXe-qQ-ERB"/>
-                                <binding destination="UOY-gY-y9M" name="toolTip" keyPath="selection.localizedToolTipToggleParticipantsButton" id="n70-vI-Phh"/>
                             </connections>
                         </button>
                         <button id="bv6-mv-CIq" userLabel="Invite Button" customClass="TCMHoverButton">
@@ -118,8 +106,6 @@
                             </buttonCell>
                             <connections>
                                 <action selector="inviteUsersToDocumentViaSharingService:" target="-1" id="Wdv-mH-git"/>
-                                <binding destination="UOY-gY-y9M" name="enabled" keyPath="selection.canAnnounceAndShare" id="pYl-6X-ILh"/>
-                                <binding destination="UOY-gY-y9M" name="toolTip" keyPath="selection.localizedToolTipShareInviteButton" id="gFK-S4-jPF"/>
                             </connections>
                         </button>
                         <textField toolTip="Window width and wrap settings" verticalHuggingPriority="750" id="15" customClass="BorderedTextField">
@@ -138,16 +124,6 @@
                 </customView>
             </subviews>
         </customView>
-        <objectController objectClassName="PlainTextEditor" editable="NO" id="UOY-gY-y9M">
-            <declaredKeys>
-                <string>showsNumberOfActiveParticipants</string>
-                <string>numberOfActiveParticipants</string>
-                <string>alternateAnnounceImage</string>
-            </declaredKeys>
-            <connections>
-                <outlet property="content" destination="-2" id="YSU-zI-rHp"/>
-            </connections>
-        </objectController>
         <menu id="eH3-RU-uKl" userLabel="Advertise Context Menu">
             <items>
                 <menuItem title="&lt;r/w&gt;" tag="2" id="KIH-pg-Ei8">
