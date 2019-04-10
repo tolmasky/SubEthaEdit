@@ -1230,22 +1230,21 @@ static NSString *tempFileName(NSString *origPath) {
 			[alert setInformativeText:NSLocalizedString(@"ANNOUNCE_WILL_MAKE_VISIBLE_INFORMATIVE_TEXT", nil)];
 			[alert addButtonWithTitle:NSLocalizedString(@"ANNOUNCE_WILL_MAKE_VISIBLE_ACTION_TITLE", nil)];
 			[alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
-			[self presentAlert:alert
-				 modalDelegate:self
-				didEndSelector:@selector(announceAndBecomeVisibleAlertDidEnd:returnCode:contextInfo:)
-				   contextInfo:nil];
+
+            // Pass in self
+            __unsafe_unretained PlainTextDocument * weakSelf = self;
+            [self presentAlert:alert completionHandler:^(NSModalResponse returnCode) {
+                if (returnCode == NSAlertFirstButtonReturn) {
+                    [weakSelf setIsAnnounced:YES];
+                }
+            }];
+
 			if ([aSender isKindOfClass:[NSButton class]]) { // toggle back the state of the button if it was a button
 				[aSender setState:[aSender state] == NSOnState ? NSOffState : NSOnState];
 			}
 		} else {
 			[self setIsAnnounced:![self isAnnounced]];
 		}
-	}
-}
-
-- (void)announceAndBecomeVisibleAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
-	if (returnCode == NSAlertFirstButtonReturn) {
-		[self setIsAnnounced:YES];
 	}
 }
 
@@ -2013,15 +2012,8 @@ static BOOL PlainTextDocumentIgnoreRemoveWindowController = NO;
         [alert setMessageText:NSLocalizedString(@"Syntax Highlighting and Wrap Lines have been turned off due to the size of the Document.", @"BigFile Message Text")];
         [alert setInformativeText:NSLocalizedString(@"Turning on syntax highlighting for very large documents is not recommended.", @"BigFile Informative Text")];
         [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
-        [self presentAlert:alert
-             modalDelegate:self
-            didEndSelector:@selector(bigDocumentAlertDidEnd:returnCode:contextInfo:)
-               contextInfo:nil];
+        [self presentAlert:alert completionHandler:nil];
     }
-}
-
-- (void)bigDocumentAlertDidEnd:(NSAlert *)anAlert returnCode:(int)aReturnCode  contextInfo:(void  *)aContextInfo {
-    [[anAlert window] orderOut:self];
 }
 
 - (NSWindow *)windowForSheet {
@@ -5332,7 +5324,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
     if ([self isProxyDocument]) {
         [self sessionDidLoseConnection:aSession];
     } else {
-        [self presentAlert:alert completionHaandler:nil];
+        [self presentAlert:alert completionHandler:nil];
     }
 }
 
