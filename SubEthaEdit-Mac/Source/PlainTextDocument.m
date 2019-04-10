@@ -3559,10 +3559,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
                                 [newAlert setMessageText:NSLocalizedString(@"Save", nil)];
                                 [newAlert setInformativeText:NSLocalizedString(@"AlertInformativeText: Replace failed", @"Informative text in an alert which tells the you user that replacing the file failed")];
                                 [newAlert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
-                                [self presentAlert:newAlert
-                                     modalDelegate:nil
-                                    didEndSelector:nil
-                                       contextInfo:NULL];
+                                [self presentAlert:newAlert completionHandler:nil];
 								if ( outError )
 									*outError = nil; 
                             }
@@ -3573,10 +3570,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
                             [newAlert setMessageText:NSLocalizedString(@"Save", nil)];
                             [newAlert setInformativeText:NSLocalizedString(@"AlertInformativeText: Error occurred during replace", @"Informative text in an alert which tells the user that an error prevented the replace")];
                             [newAlert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
-                            [self presentAlert:newAlert
-                                 modalDelegate:nil
-                                didEndSelector:nil
-                                   contextInfo:NULL];
+                            [self presentAlert:newAlert completionHandler:nil];
 							if ( outError )
 								*outError = nil; 
 
@@ -5308,7 +5302,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
     [alert setMessageText:NSLocalizedString(@"Kicked", @"Kick title in Sheet")];
     [alert setInformativeText:NSLocalizedString(@"KickedInfo", @"Kick info in Sheet")];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"Ok in sheet")];
-    [self presentAlert:alert modalDelegate:nil didEndSelector:NULL contextInfo:nil];
+    [self presentAlert:alert completionHandler:nil];
 }
 
 - (void)sessionDidLeave:(TCMMMSession *)aSession {
@@ -5319,7 +5313,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
     [alert setMessageText:NSLocalizedString(@"ProblemLeave", @"ProblemLeave title in Sheet")];
     [alert setInformativeText:NSLocalizedString(@"ProblemLeaveInfo", @"ProblemLeaveInfo info in Sheet")];
     [alert addButtonWithTitle:NSLocalizedString(@"OK", @"Ok in sheet")];
-    [self presentAlert:alert modalDelegate:nil didEndSelector:NULL contextInfo:nil];
+    [self presentAlert:alert completionHandler:nil];
 }
 
 
@@ -5338,7 +5332,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
     if ([self isProxyDocument]) {
         [self sessionDidLoseConnection:aSession];
     } else {
-        [self presentAlert:alert modalDelegate:nil didEndSelector:NULL contextInfo:nil];
+        [self presentAlert:alert completionHaandler:nil];
     }
 }
 
@@ -5354,10 +5348,7 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
             [alert setMessageText:NSLocalizedString(@"LostConnection", @"LostConnection title in Sheet")];
             [alert setInformativeText:NSLocalizedString(@"LostConnectionInfo", @"LostConnection info in Sheet")];
             [alert addButtonWithTitle:NSLocalizedString(@"OK", @"Ok in sheet")];
-            [self presentAlert:alert
-                 modalDelegate:nil
-                didEndSelector:NULL
-                   contextInfo:nil];
+            [self presentAlert:alert completionHandler:nil];
         }
     } else if (I_documentProxyWindowController) {
         [I_documentProxyWindowController didLoseConnection];
