@@ -2201,12 +2201,10 @@ struct SelectionRange
 	}
 
     [self.O_exportSheetController setContent:[[[self documentMode] defaults] objectForKey:DocumentModeExportPreferenceKey]];
-    [NSApp beginSheet: self.O_exportSheet
-            modalForWindow: [self windowForSheet]
-            modalDelegate:  self
-            didEndSelector: @selector(continueExport:returnCode:contextInfo:)
-            contextInfo:    nil];
 
+    [self.windowForSheet beginSheet:self.O_exportSheet completionHandler:^(NSModalResponse returnCode) {
+        [self continueExport:self.O_exportSheet returnCode:returnCode contextInfo:nil];
+    }];
 }
 
 - (IBAction)cancelExport:(id)aSender {
@@ -2217,8 +2215,7 @@ struct SelectionRange
     [NSApp endSheet:self.O_exportSheet returnCode:NSModalResponseOK];
 }
 
-- (void)continueExport:(NSWindow *)aSheet returnCode:(int)aReturnCode contextInfo:(void *)aContextInfo {
-    [aSheet orderOut:self];
+- (void)continueExport:(NSWindow *)aSheet returnCode:(NSModalResponse)aReturnCode contextInfo:(void *)aContextInfo {
     if (aReturnCode == NSModalResponseOK) {
         NSSavePanel *savePanel=[NSSavePanel savePanel];
         [savePanel setPrompt:NSLocalizedString(@"ExportPrompt",@"Text on the active SavePanel Button in the export sheet")];
