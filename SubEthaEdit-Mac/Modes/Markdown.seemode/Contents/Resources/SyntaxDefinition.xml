@@ -9,9 +9,9 @@
 	<states>
 		<default id="Base" scope="meta.default">
 
-		    <state id="H1" scope="structured.heading.1">
-               <begin><regex>^#(?:[^#])</regex><autoend>\n</autoend></begin>
-               <end><regex>[\n\r]</regex></end>
+		    <state id="H1" scope="structured.heading.1" foldable="yes">
+               <begin><regex>^#(?:(?:[^\S\r\n][^\r\n]*)|(?=[\r\n]))</regex><autoend>\n</autoend></begin>
+               <end><regex>[\r\n](?=#(?:(?:[^\S\r\n][^\r\n]*)|(?=[\r\n])))</regex></end>
            	</state>
 
 			<keywords id="H1_Line" scope="structured.heading.1">
