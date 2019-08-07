@@ -54,10 +54,11 @@
 	return (id)super.delegate;
 }
 
-// - (void)setNeedsDisplayInRect:(NSRect)aRect avoidAdditionalLayout:(BOOL)needsLayout {
-// 	NSLog(@"%s %@ %@",__FUNCTION__,NSStringFromRect(aRect),needsLayout?@"YES":@"NO");
-// 	[super setNeedsDisplayInRect:aRect avoidAdditionalLayout:NO];
-// }
+- (void)setNeedsDisplayInRect:(NSRect)aRect avoidAdditionalLayout:(BOOL)avoidAdditionaLayout {
+    if (aRect.size.height > 12.98 && !avoidAdditionaLayout)
+        NSLog(@"%s %@ %@",__FUNCTION__,NSStringFromRect(aRect),avoidAdditionaLayout?@"YES":@"NO");
+    [super setNeedsDisplayInRect:aRect avoidAdditionalLayout:avoidAdditionaLayout];
+}
 
 - (void)adjustContainerInsetToScrollView {
 	SEEPlainTextEditorScrollView *enclosingScrollView = (SEEPlainTextEditorScrollView *)self.enclosingScrollView;
@@ -75,6 +76,7 @@
 }
 
 - (void)setFrameSize:(NSSize)newSize {
+    NSLog(@"OLD SIZE: %@ NEW SIZE: %@ MAX SIZE: %@ MIN SIZE: %@", NSStringFromSize(self.frame.size), NSStringFromSize(newSize), NSStringFromSize(self.maxSize), NSStringFromSize(self.minSize));
 	[super setFrameSize:newSize];
 }
 
@@ -301,6 +303,8 @@ static NSMenu *S_defaultMenu=nil;
 }
 
 - (void)drawRect:(NSRect)aRect {
+//    NSLog(@"redrawing: %@ %f %f", NSStringFromRect(aRect), aRect.size.width, aRect.size.height);
+        
     [super drawRect:aRect];
     // now paint Cursors if there are any
     PlainTextDocument *document = self.document;

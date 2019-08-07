@@ -5918,6 +5918,16 @@ const void *SEESavePanelAssociationKey = &SEESavePanelAssociationKey;
                forModes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
 }
 
+- (void)textStorage:(NSTextStorage *)textStorage
+ willProcessEditing:(NSTextStorageEditActions)editedMask
+              range:(NSRange)editedRange
+     changeInLength:(NSInteger)delta;
+{
+    NSLog(@"%s %@ %ld %ld",__FUNCTION__,NSStringFromRange(editedRange),editedMask,(long)delta);
+    //[super textStorage:aTextStorage willProcessEditing:editedMask range:editedRange changeInLength:delta];
+}
+
+
 - (NSDictionary *)blockeditAttributesForTextStorage:(FoldableTextStorage *)aTextStorage {
     return [self blockeditAttributes];
 }
