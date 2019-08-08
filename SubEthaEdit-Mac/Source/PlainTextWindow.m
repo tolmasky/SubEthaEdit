@@ -9,6 +9,18 @@
 
 @implementation PlainTextWindow
 
+- (void)awakeFromNib
+{
+    self.tab.accessoryView = self.cuationView;
+
+    NSNotificationCenter * defaultCenter = NSNotificationCenter.defaultCenter;
+
+    [defaultCenter addObserver:self
+                      selector:@selector(windowDidBecomeMain:)
+                          name:NSWindowDidBecomeMainNotification
+                        object:self];
+}
+
 - (IBAction)performClose:(id)sender {
     if ([[self windowController] isKindOfClass:[PlainTextWindowController class]]) {
         [(PlainTextWindowController *)[self windowController] closeTab:sender];
@@ -136,6 +148,61 @@ static NSPoint placeWithCascadePoint(NSWindow *window, NSPoint cascadePoint) {
             [super toggleTabBar:nil];
         }
     }
+}
+
+@end
+
+typedef void (^AlertCompletionHandler) (NSModalResponse returnCode);
+
+@implementation PlainTextWindow (Alerts)
+
+- (void)alert:(NSString *)message
+        style:(NSAlertStyle)style
+      details:(NSString *)details
+      buttons:(NSArray *)buttons
+         then:(void (^)(PlainTextWindow *, NSModalResponse))then {
+
+    NSAlert *alert = [[NSAlert alloc] init];
+
+    [alert setAlertStyle:style];
+    [alert setMessageText:message];
+    [alert setInformativeText:details];
+
+    for (NSString * button in buttons) {
+        [alert addButtonWithTitle: button];
+    }
+
+    __unsafe_unretained PlainTextWindow *weakSelf = self;
+    AlertCompletionHandler handler = ^(NSModalResponse returnCode) {
+          PlainTextWindow *strongSelf = weakSelf;
+          if (strongSelf && then) {
+              then(strongSelf, returnCode);
+          }
+    };
+
+    if (self.tabGroup.selectedWindow != self) {
+        self.presentScheduledAlertForWindow = ^(NSWindow * self){
+            [alert beginSheetModalForWindow:self completionHandler:handler];
+        };
+
+        return;
+    }
+
+    [alert beginSheetModalForWindow:self completionHandler:handler];
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+    if (!self.presentScheduledAlertForWindow)
+        return;
+
+    typeof(_presentScheduledAlertForWindow) action = [self.presentScheduledAlertForWindow copy];
+    self.presentScheduledAlertForWindow = nil;
+    
+    // The sheet doesn't animate with this. Probably not great.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        action(self);
+    });
 }
 
 @end

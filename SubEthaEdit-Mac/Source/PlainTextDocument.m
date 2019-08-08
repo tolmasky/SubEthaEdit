@@ -824,6 +824,7 @@ static NSString *tempFileName(NSString *origPath) {
     if (minIndex != NSNotFound) {
         // Found one, use to display
         NSWindow *window = [orderedWindows objectAtIndex:minIndex];
+        [(PlainTextWindow *)window alert:nil style:NSAlertStyleWarning details:nil buttons:nil then:nil];
         [window makeKeyAndOrderFront:self];
         [alert beginSheetModalForWindow:window completionHandler:completionHandler];
     } else {
@@ -843,24 +844,28 @@ static NSString *tempFileName(NSString *origPath) {
 }
 
 
-- (void)alert:(NSString *)message style:(NSAlertStyle)style details:(NSString *)details buttons:(NSArray *)buttons then:(void (^)(PlainTextDocument *, NSModalResponse))then {
-    NSAlert *alert = [[NSAlert alloc] init];
-    
-    [alert setAlertStyle:style];
-    [alert setMessageText:message];
-    [alert setInformativeText:details];
-    
-    for (NSString * button in buttons) {
-        [alert addButtonWithTitle: button];
-    }
+- (void)alert:(NSString *)message
+        style:(NSAlertStyle)style
+      details:(NSString *)details
+      buttons:(NSArray *)buttons
+         then:(void (^)(PlainTextDocument *, NSModalResponse))then {
 
     __unsafe_unretained PlainTextDocument *weakSelf = self;
-    [self presentAlert:alert completionHandler:^(NSModalResponse returnCode) {
+    id wrapper = ^(PlainTextWindow *window, NSModalResponse returnCode) {
         PlainTextDocument *strongSelf = weakSelf;
         if (strongSelf && then) {
             then(strongSelf, returnCode);
         }
-    }];
+    };
+
+    for (NSWindowController * windowController in self.windowControllers) {
+        PlainTextWindow * window = (PlainTextWindow *)windowController.window;
+        [window alert:message
+                style:style
+              details:details
+              buttons:buttons
+                 then:wrapper];
+    }
 }
 
 - (void)warn:(NSString *)message details:(NSString *)details buttons:(NSArray *)buttons then:(void (^)(PlainTextDocument *, NSModalResponse))then {
