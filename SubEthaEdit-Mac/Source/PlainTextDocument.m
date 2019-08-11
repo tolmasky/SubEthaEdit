@@ -8,6 +8,8 @@
 
 #import <TCMPortMapper/TCMPortMapper.h>
 
+#import "NSDocument+AlertsAdditions.h"
+
 #import "TCMMillionMonkeys/TCMMillionMonkeys.h"
 #import "PlainTextEditor.h"
 #import "SEEConnectionManager.h"
@@ -806,7 +808,7 @@ static NSString *tempFileName(NSString *origPath) {
     self.persistentDocumentScopedBookmarkURLs = nil;
 }
 
-- (void)presentAlert:(NSAlert *)alert completionHandler:(void (^)(NSModalResponse returnCode))completionHandler {
+/*- (void)presentAlert:(NSAlert *)alert completionHandler:(void (^)(NSModalResponse returnCode))completionHandler {
     if (alert == nil) { return; }
 
     // Search a window that doesn't yet show a sheet
@@ -841,10 +843,10 @@ static NSString *tempFileName(NSString *origPath) {
             [alert beginSheetModalForWindow:window completionHandler:completionHandler];
         };
     }
-}
+}*/
 
 
-- (void)alert:(NSString *)message
+/*- (void)alert:(NSString *)message
         style:(NSAlertStyle)style
       details:(NSString *)details
       buttons:(NSArray *)buttons
@@ -866,9 +868,9 @@ static NSString *tempFileName(NSString *origPath) {
               buttons:buttons
                  then:wrapper];
     }
-}
+}*/
 
-- (void)warn:(NSString *)message details:(NSString *)details buttons:(NSArray *)buttons then:(void (^)(PlainTextDocument *, NSModalResponse))then {
+- (void)warn:(NSString *)message details:(NSString *)details buttons:(NSArray *)buttons then:(void (^)(NSDocument *, NSModalResponse))then {
     [self alert:message style:NSAlertStyleWarning details:details buttons:buttons then:then];
 }
 

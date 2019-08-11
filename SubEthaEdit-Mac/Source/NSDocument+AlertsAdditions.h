@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
         style:(NSAlertStyle)style
       details:(NSString *)details
       buttons:(NSArray *)buttons
-         then:(void (^)(NSDocument *, NSModalResponse))then
+         then:(void (^)(NSDocument *, NSModalResponse))then;
 
 @end
 

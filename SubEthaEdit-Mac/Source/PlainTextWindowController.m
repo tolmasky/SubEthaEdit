@@ -489,7 +489,8 @@ static NSPoint S_cascadePoint = {0.0,0.0};
     
     NSWindowTab *tab = self.window.tab;
     tab.title = self.plainTextDocument.displayName;
-    
+    NSLog(@"--> %@", [self valueForKeyPath:@"window.hasSheets"]);
+    NSLog(@"--> %@", [self valueForKeyPath:@"window"]);
     [self updateLock];
 }
 

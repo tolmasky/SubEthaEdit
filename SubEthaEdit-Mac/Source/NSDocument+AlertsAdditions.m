@@ -7,11 +7,11 @@
 //
 
 #import <objc/runtime.h>
-#import "NSDocument+Alerts.h"
+#import "NSDocument+AlertsAdditions.h"
 
-@interface QueueableAlert : NSAlert
-@property (nonatomic, copy) void (^then)(NSWindow *);
-@end
+//@interface QueueableAlert : NSAlert
+//@property (nonatomic, copy) void (^then)(NSWindow *);
+//@end
 
 NSString const * DocumentAlertsKey = @"DocumentAlertsKey";
 
@@ -36,7 +36,7 @@ NSString const * DocumentAlertsKey = @"DocumentAlertsKey";
       buttons:(NSArray *)buttons
          then:(void (^)(NSDocument *, NSModalResponse))then
 {
-    NSAlert *alert = [[QueueableAlert alloc] init];
+    NSAlert *alert = [[NSAlert alloc] init];
 
     alert.alertStyle = style;
     alert.messageText = message;
@@ -50,10 +50,8 @@ NSString const * DocumentAlertsKey = @"DocumentAlertsKey";
 
     for (NSWindowController * windowController in self.windowControllers) {
         NSWindow * window = windowController.window;
-        BOOL wontAwkwardlyOrderFront =
-            window.sheets.count > 0 ||
-            window.tabGroup.selectedWindow == window;
-        
+        BOOL wontAwkwardlyOrderFront = NSApp.keyWindow == window;
+
         if (wontAwkwardlyOrderFront) {
             [alert beginSheetModalForWindow:window
                           completionHandler:^(NSModalResponse returnCode) {

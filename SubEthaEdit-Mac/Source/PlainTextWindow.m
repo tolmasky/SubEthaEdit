@@ -3,11 +3,40 @@
 //
 //  Created by Martin Ott on 11/23/06.
 
+#import "NSDocument+AlertsAdditions.h"
 #import "PlainTextWindow.h"
 #import "PlainTextWindowController.h"
 #import "PreferenceKeys.h"
 
 @implementation PlainTextWindow
+
++ (NSSet *)keyPathsForValuesAffectingHasSheets {
+    NSLog(@"OH REALLY");
+    return [NSSet setWithArray:@[@"attachedSheet", @"document.alerts"]];
+}
+
+- (BOOL)hasSheets {
+    NSLog(@"here... %d", self.sheets.count > 0 ||
+          ((NSDocument *)self.windowController.document).alerts.count > 0);
+    return  self.attachedSheet != nil ||
+            ((NSDocument *)self.windowController.document).alerts.count > 0;
+}
+
+- (void)windowWillBeginSheet:(NSNotification *)notification {
+    [self willChangeValueForKey:@"hasSheets"];
+    // The sheet doesn't animate with this. Probably not great.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        //NSLog(@"WILL SHOW SHEET: %d", self.hasSheets);
+        [self didChangeValueForKey:@"hasSheets"];
+        NSLog(@"DID CHANGE VALUE FOR KEY!!!");
+        NSLog(@"WILL SHOW SHEET: %d", self.hasSheets);
+    });
+}
+
+- (void)windowDidEndSheet:(NSNotification *)notification {
+    [self willChangeValueForKey:@"hasSheets"];
+    [self didChangeValueForKey:@"hasSheets"];
+}
 
 - (void)awakeFromNib
 {
@@ -18,6 +47,16 @@
     [defaultCenter addObserver:self
                       selector:@selector(windowDidBecomeMain:)
                           name:NSWindowDidBecomeMainNotification
+                        object:self];
+
+    [defaultCenter addObserver:self
+                      selector:@selector(windowWillBeginSheet:)
+                          name:NSWindowWillBeginSheetNotification
+                        object:self];
+
+    [defaultCenter addObserver:self
+                      selector:@selector(windowDidEndSheet:)
+                          name:NSWindowDidEndSheetNotification
                         object:self];
 }
 
@@ -30,6 +69,7 @@
 }
 
 - (void)sendEvent:(NSEvent *)event {
+    //NSLog(@"%d", self.hasSheets);
     // Handle ⌘ 1 ... ⌘ 9, ⌘ 0 shortcuts to select tabs
     if ([event type] == NSEventTypeKeyDown) {
         int flags = [event modifierFlags];

@@ -39,15 +39,20 @@
                 </imageView>
             </subviews>
             <connections>
-                <binding destination="-2" name="hidden" keyPath="self.window.presentScheduledAlertForWindow" id="TK8-cP-y8e">
+                <binding destination="-2" name="hidden" keyPath="window.hasSheets" id="S99-dx-aV1">
                     <dictionary key="options">
-                        <string key="NSValueTransformerName">NSIsNil</string>
+                        <string key="NSValueTransformerName">NSNegateBoolean</string>
                     </dictionary>
                 </binding>
             </connections>
             <point key="canvasLocation" x="39" y="-63"/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="w1y-48-aKR"/>
+        <objectController id="1sV-8E-0A7">
+            <connections>
+                <outlet property="content" destination="6" id="WaC-oO-HGD"/>
+            </connections>
+        </objectController>
     </objects>
     <resources>
         <image name="NSCaution" width="32" height="32"/>

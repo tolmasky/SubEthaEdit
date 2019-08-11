@@ -8,7 +8,10 @@
 
 @interface PlainTextWindow : NSWindow
 @property BOOL constrainingToScreenSuspended;
-@property(retain) IBOutlet  NSView * cuationView;
+
+@property (retain) IBOutlet  NSView * cuationView;
+@property (readonly) BOOL hasSheets;
+
 @property (nonatomic, copy) void (^presentScheduledAlertForWindow)(NSWindow *);
 
 - (void)ensureTabBarVisiblity:(BOOL)shouldAlwaysBeVisible;
