@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^AlertConsequence)(NSDocument *, NSModalResponse);
+
 @interface NSDocument (Alerts)
 
 @property (nonatomic, readonly) NSArray * alerts;
@@ -18,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
         style:(NSAlertStyle)style
       details:(NSString *)details
       buttons:(NSArray *)buttons
-         then:(void (^)(NSDocument *, NSModalResponse))then;
+         then:(AlertConsequence)then;
 
 @end
 

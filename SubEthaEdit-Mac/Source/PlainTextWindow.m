@@ -233,6 +233,14 @@ typedef void (^AlertCompletionHandler) (NSModalResponse returnCode);
 
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
+}
+/*
+    for (NSAlert * )
+    - (void)windowDidBecomeMain:(NSNotification *)notification {
+        .
+    }
+
+    
     if (!self.presentScheduledAlertForWindow)
         return;
 
@@ -243,6 +251,6 @@ typedef void (^AlertCompletionHandler) (NSModalResponse returnCode);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         action(self);
     });
-}
+}*/
 
 @end

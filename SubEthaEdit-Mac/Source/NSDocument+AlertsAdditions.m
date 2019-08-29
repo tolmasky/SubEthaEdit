@@ -9,6 +9,44 @@
 #import <objc/runtime.h>
 #import "NSDocument+AlertsAdditions.h"
 
+@interface ConsequentialAlert : NSAlert
+
+@property (readonly, copy) AlertConsequence then;
+
+- (instancetype)initWithMessage:(NSString *)message
+                          style:(NSAlertStyle)style
+                        details:(NSString *)details
+                        buttons:(NSArray *)buttons
+                           then:(AlertConsequence)then;
+
+@end
+
+@implementation ConsequentialAlert
+
+- (instancetype)initWithMessage:(NSString *)message
+                          style:(NSAlertStyle)style
+                        details:(NSString *)details
+                        buttons:(NSArray *)buttons
+                           then:(AlertConsequence)then
+{
+    self = [super init];
+
+    if (self) {
+        self.messageText = message;
+        self.alertStyle = style;
+        self.informativeText = details;
+
+        for (NSString * button in buttons)
+            [self addButtonWithTitle:button];
+
+        _then = [then copy];
+    }
+
+    return self;
+}
+
+@end
+
 //@interface QueueableAlert : NSAlert
 //@property (nonatomic, copy) void (^then)(NSWindow *);
 //@end
@@ -34,30 +72,40 @@ NSString const * DocumentAlertsKey = @"DocumentAlertsKey";
         style:(NSAlertStyle)style
       details:(NSString *)details
       buttons:(NSArray *)buttons
-         then:(void (^)(NSDocument *, NSModalResponse))then
+         then:(AlertConsequence)then
 {
-    NSAlert *alert = [[NSAlert alloc] init];
+    ConsequentialAlert * alert =
+        [[ConsequentialAlert alloc] initWithMessage:message
+                                              style:style
+                                            details:details
+                                            buttons:buttons
+                                               then:then];
 
-    alert.alertStyle = style;
-    alert.messageText = message;
-    alert.informativeText = details;
+    [self.mutableAlerts addObject:alert];
 
-    for (NSString * button in buttons)
-        [alert addButtonWithTitle:button];
+    if (self.mutableAlerts.count > 1)
+        return;
 
-    if (self.mutableAlerts.count > 0)
-        [self.mutableAlerts addObject:alert];
+    NSUInteger index = [self.windowControllers indexOfObjectPassingTest:
+                        ^(NSWindowController * WC, NSUInteger index, BOOL * stop) {
+                            return (BOOL)(WC.window == NSApp.mainWindow);
+                        }];
 
-    for (NSWindowController * windowController in self.windowControllers) {
-        NSWindow * window = windowController.window;
-        BOOL wontAwkwardlyOrderFront = NSApp.keyWindow == window;
+    if (index == NSNotFound)
+        return;
 
-        if (wontAwkwardlyOrderFront) {
-            [alert beginSheetModalForWindow:window
-                          completionHandler:^(NSModalResponse returnCode) {
-            }];
-        }
-    }
+    NSWindow * window = self.windowControllers[index].window;
+    __unsafe_unretained NSDocument * weakSelf = self;
+
+    [alert beginSheetModalForWindow:window
+                  completionHandler:^(NSModalResponse returnCode) {
+                      NSDocument * strongSelf = weakSelf;
+                      [strongSelf.mutableAlerts removeObjectAtIndex:0];
+
+                      if (strongSelf && then) {
+                          then(strongSelf, returnCode);
+                      }
+                  }];
 }
 
 @end

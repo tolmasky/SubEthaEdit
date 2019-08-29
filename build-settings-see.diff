@@ -1,0 +1,78 @@
+diff --git a/BuildConfig/Identity.xcconfig b/BuildConfig/Identity.xcconfig
+index 8084f4d2..9759d86e 100644
+--- a/BuildConfig/Identity.xcconfig
++++ b/BuildConfig/Identity.xcconfig
+@@ -1,9 +1,11 @@
+ // Change to yours (you find the id by 'security find-identity -v' it is the one inside the brackets, )
+ // and then make git ignore it by
+ // git update-index --skip-worktree BuildConfig/Identity.xcconfig
+-DEVELOPMENT_TEAM = Change In Identity.xcconfig
+-CODE_SIGN_IDENTITY = Mac Developer
++// DEVELOPMENT_TEAM = Change In Identity.xcconfig
++// CODE_SIGN_IDENTITY = Mac Developer
+ 
++CODE_SIGN_IDENTITY = -
++ENABLE_HARDENED_RUNTIME = NO
+ SEE_APP_IDENTIFIER_BASE = de.opensource.SubEthaEdit
+ // SEE_APP_PRODUCT_NAME = SubEthaEdit
+ 
+diff --git a/SubEthaEdit-Mac/SeeTextImporter/SeeTextImporter.xcodeproj/project.pbxproj b/SubEthaEdit-Mac/SeeTextImporter/SeeTextImporter.xcodeproj/project.pbxproj
+index 1a3ede3e..85295709 100644
+--- a/SubEthaEdit-Mac/SeeTextImporter/SeeTextImporter.xcodeproj/project.pbxproj
++++ b/SubEthaEdit-Mac/SeeTextImporter/SeeTextImporter.xcodeproj/project.pbxproj
+@@ -271,6 +271,7 @@
+ 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+ 				CLANG_WARN_UNREACHABLE_CODE = YES;
+ 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
++				ENABLE_HARDENED_RUNTIME = NO;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+ 				ENABLE_TESTABILITY = YES;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+@@ -306,6 +307,7 @@
+ 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+ 				CLANG_WARN_UNREACHABLE_CODE = YES;
+ 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
++				ENABLE_HARDENED_RUNTIME = NO;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+ 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+diff --git a/SubEthaEdit-Mac/SubEthaEdit.xcodeproj/project.pbxproj b/SubEthaEdit-Mac/SubEthaEdit.xcodeproj/project.pbxproj
+index 5cc5bc5c..9f078324 100644
+--- a/SubEthaEdit-Mac/SubEthaEdit.xcodeproj/project.pbxproj
++++ b/SubEthaEdit-Mac/SubEthaEdit.xcodeproj/project.pbxproj
+@@ -3269,6 +3269,7 @@
+ 				CLANG_WARN_UNREACHABLE_CODE = YES;
+ 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+ 				DEBUG_INFORMATION_FORMAT = dwarf;
++				ENABLE_HARDENED_RUNTIME = NO;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+ 				ENABLE_TESTABILITY = YES;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+@@ -3304,6 +3305,7 @@
+ 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+ 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+ 				DEPLOYMENT_POSTPROCESSING = YES;
++				ENABLE_HARDENED_RUNTIME = NO;
+ 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+ 				GCC_NO_COMMON_BLOCKS = YES;
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+diff --git a/see/see.xcodeproj/project.pbxproj b/see/see.xcodeproj/project.pbxproj
+index 5dacf359..8e05d0bd 100644
+--- a/see/see.xcodeproj/project.pbxproj
++++ b/see/see.xcodeproj/project.pbxproj
+@@ -376,6 +376,7 @@
+ 				CLANG_ENABLE_OBJC_WEAK = YES;
+ 				CODE_SIGN_STYLE = Manual;
+ 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
++				ENABLE_HARDENED_RUNTIME = NO;
+ 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+ 				GCC_PREFIX_HEADER = "see/see-Prefix.pch";
+ 				INFOPLIST_FILE = see/See_Info.plist;
+@@ -394,6 +395,7 @@
+ 				CLANG_ENABLE_OBJC_WEAK = YES;
+ 				CODE_SIGN_STYLE = Manual;
+ 				CREATE_INFOPLIST_SECTION_IN_BINARY = YES;
++				ENABLE_HARDENED_RUNTIME = NO;
+ 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+ 				GCC_PREFIX_HEADER = "see/see-Prefix.pch";
+ 				INFOPLIST_FILE = see/See_Info.plist;
